@@ -133,23 +133,17 @@ int main(int argc, char *argv[])
     int eof = 1;
 
     Formula *nescau = NULL;
-    Formula **formula = NULL;
+    Formula *formula = NULL;
 
     int falta = clausulas;
     while (falta)
     {
-        if (!formula){
-            formula = &nescau;
-        }
         Clause *santa = NULL;
-        Clause **clausula = NULL;
+        Clause *clausula = NULL;
         while (valor)
         {
             valor = 0;
             k = 0;
-            if (!clausula){
-                clausula = &santa;
-            }
             while (c != ' ' && c != '\n')
             {
                 c = fgetc(fp);
@@ -175,6 +169,9 @@ int main(int argc, char *argv[])
                 santa->sinal = IDENTITY;
                 santa->literal = &(liter[valor - 1]);
                 santa->next = NULL;
+                if (!clausula){
+                    clausula = santa;
+                }
                 santa = santa->next;
             }
             else if (valor < 0)
@@ -183,13 +180,19 @@ int main(int argc, char *argv[])
                 santa->sinal = COMPLEMENT;
                 santa->literal = &(liter[-(valor + 1)]);
                 santa->next = NULL;
+                if (!clausula){
+                    clausula = santa;
+                }
                 santa = santa->next;
             }
         }
         valor = 1;
         nescau = (Formula *)malloc(sizeof(Formula));
-        nescau->clausula = *clausula;
+        nescau->clausula = clausula;
         nescau->next = NULL;
+        if (!formula){
+            formula = nescau;
+        }
         nescau = nescau->next;
         falta--;
     }
