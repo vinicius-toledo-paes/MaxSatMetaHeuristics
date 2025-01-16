@@ -164,7 +164,7 @@ void greedy(Solution *soluction, Formula *formula){
 
 Literals *copyLiterals(Literals *liter){
     Literals *newLiterals = initLiterals();
-    Literals **initPointer = &newLiterals;
+    Literals *initPointer = NULL;
     Literals *oldLiterals = liter;
 
     while(oldLiterals){
@@ -174,11 +174,14 @@ Literals *copyLiterals(Literals *liter){
         newLiterals->literal->id = oldLiterals->literal->id;
         newLiterals->literal->valor = UNSOLVED;
 
+        if (!initPointer){
+            initPointer = newLiterals;
+        }
         newLiterals = newLiterals->next;
         oldLiterals = oldLiterals->next;
     }
 
-    return *initPointer;
+    return initPointer;
 
 }
 
