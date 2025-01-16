@@ -107,6 +107,7 @@ Formula *shuffleFormula(Formula *formula){
     int *lista = (int *)  malloc(n*sizeof(int));
 
     for(int i = 0; i < n; i++){
+        newFormula[i] = (Formula *) malloc(sizeof(Formula));
         lista[i] = rand()%(3*n);
         newFormula[i]->clausula = shuffleClause(formulaPointer->clausula);
         newFormula[i]->next = NULL;
