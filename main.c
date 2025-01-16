@@ -66,7 +66,7 @@ int main(int argc, char *argv[]){
     }
 
     Literals *lite;
-    Literals *literals = lite;
+    Literals **literals = &lite;
     for(j = 0; j < literais; j++){
         lite = (Literals *) malloc(sizeof(Literals));
         lite->literal = &liter[j];
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]){
 
         tempoInicial = clock();
 
-        maxClauses = tryGreedy(literals, *formula, repetitons);
+        maxClauses = tryGreedy(*literals, *formula, repetitons);
 
         tempoFinal = clock();
     }
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]){
         
         tempoInicial = clock();
 
-        maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, literals, *formula);
+        maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, *literals, *formula);
 
         tempoFinal = clock();
     }
