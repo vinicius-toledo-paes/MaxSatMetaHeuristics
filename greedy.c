@@ -174,16 +174,14 @@ Literals *copyLiterals(Literals *liter){
         newLiterals->literal->id = oldLiterals->literal->id;
         newLiterals->literal->valor = UNSOLVED;
 
-        if (initPointer){
-            newLiterals->next = initPointer;
-        }
+        
+        newLiterals->next = initPointer;
         initPointer = newLiterals;
         
         oldLiterals = oldLiterals->next;
     }
 
     return initPointer;
-
 }
 
 int tryGreedy(Literals **literals, Formula *formula, int numberOfIterations){

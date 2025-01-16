@@ -1,7 +1,8 @@
 #include "clause.h"
 
 Literals* initLiterals(){
-    return (Literals *) malloc(sizeof(Literals));
+    Literals *literal = (Literals *) malloc(sizeof(Literals));
+    return literal;
 }
 
 Formula* initFormula(){
