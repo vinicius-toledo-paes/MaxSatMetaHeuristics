@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
         falta--;
     }
 
-    printFormula(*formula);
+    printFormula(formula);
 
     int maxClauses;
 
@@ -208,7 +208,7 @@ int main(int argc, char *argv[])
 
         tempoInicial = clock();
 
-        maxClauses = tryGreedy(*literals, *formula, repetitons);
+        maxClauses = tryGreedy(*literals, formula, repetitons);
 
         tempoFinal = clock();
     }
@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
 
         tempoInicial = clock();
 
-        maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, *literals, *formula);
+        maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, *literals, formula);
 
         tempoFinal = clock();
     }
