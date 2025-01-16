@@ -83,6 +83,7 @@ int main(int argc, char *argv[]){
         Clause *santa;
         Clause *clausula = santa;
         while(valor){
+            valor = 0;
             eof = fscanf(fp, "%d*c", &valor);
             if ((eof != EOF) && (valor > 0)){
                 santa = (Clause *) malloc(sizeof(Clause));
@@ -106,25 +107,29 @@ int main(int argc, char *argv[]){
 
     int maxClauses;
 
-    if ((heuristica[0] == 'g') && (heuristica[1] == 'r') && (heuristica[2] == 'e') && (heuristica[3] == 'e') && (heuristica[4] == 'd') && (heuristica[5] == 'y') && (heuristica[6] == '\0')) {
+    if ((heuristica[0] == 'g') && (heuristica[1] == 'r') && (heuristica[2] == 'e') && (heuristica[3] == 'e') && (heuristica[4] == 'd') && (heuristica[5] == 'y')) {
         printf("Heuristica utilizada: greedy");
+        int repetitons = literais;
+
         tempoInicial = clock();
-        maxClauses = tryGreedy(literals, formula, literais);
+
+        maxClauses = tryGreedy(literals, formula, repetitons);
+
         tempoFinal = clock();
     }
 
-    if ((heuristica[0] == 'g') && (heuristica[1] == 'e') && (heuristica[2] == 'n') && (heuristica[3] == 'e') && (heuristica[4] == 't') && (heuristica[5] == 'i') && (heuristica[6] == 'c') && (heuristica[7] == '\0')) {
+    if ((heuristica[0] == 'g') && (heuristica[1] == 'e') && (heuristica[2] == 'n') && (heuristica[3] == 'e') && (heuristica[4] == 't') && (heuristica[5] == 'i') && (heuristica[6] == 'c')) {
         printf("Heuristica utilizada: genetic");
+        int populationSize = clausulas + literais;
+        int maxIterations = literais;
+        int mrsDeath = literais;
+        int mrLife = clausulas;
+        int mutationProbability = literais;
+        
         tempoInicial = clock();
-        int mrsDeath = clausulas - literais;
-        if (mrsDeath < 0){
-            mrsDeath = - mrsDeath;
-        }else if (mrsDeath == 0){
-            mrsDeath = (int) 9*clausulas/10;
 
-        }
-        int mrLife = mrsDeath;
-        maxClauses = bestGenes(clausulas, literais, mrsDeath, mrLife, clausulas + literais, literals, formula);
+        maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, literals, formula);
+
         tempoFinal = clock();
     }
 
