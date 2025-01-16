@@ -79,7 +79,9 @@ int main(int argc, char *argv[]){
 
     Formula *nescau;
     Formula **formula = &nescau;
-    while(eof != EOF){
+
+    int falta = clausulas;
+    while(falta){
         Clause *santa;
         Clause **clausula = &santa;
         while(valor){
@@ -103,6 +105,7 @@ int main(int argc, char *argv[]){
         nescau->clausula = *clausula;
         nescau->next = NULL;
         nescau = nescau->next;
+        falta--;
     }
 
     int maxClauses;
