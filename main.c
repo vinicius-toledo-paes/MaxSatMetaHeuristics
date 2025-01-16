@@ -78,10 +78,10 @@ int main(int argc, char *argv[]){
     int eof = 1;
 
     Formula *nescau;
-    Formula *formula = nescau;
+    Formula **formula = &nescau;
     while(eof != EOF){
         Clause *santa;
-        Clause *clausula = santa;
+        Clause **clausula = santa;
         while(valor){
             valor = 0;
             eof = fscanf(fp, "%d*c", &valor);
@@ -101,7 +101,7 @@ int main(int argc, char *argv[]){
         }
         valor = 1;
         nescau = (Formula *) malloc(sizeof(Formula));
-        nescau->clausula = clausula;
+        nescau->clausula = *clausula;
         nescau->next = NULL;
         nescau = nescau->next;
     }
@@ -114,7 +114,7 @@ int main(int argc, char *argv[]){
 
         tempoInicial = clock();
 
-        maxClauses = tryGreedy(literals, formula, repetitons);
+        maxClauses = tryGreedy(literals, *formula, repetitons);
 
         tempoFinal = clock();
     }
@@ -129,7 +129,7 @@ int main(int argc, char *argv[]){
         
         tempoInicial = clock();
 
-        maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, literals, formula);
+        maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, literals, *formula);
 
         tempoFinal = clock();
     }
