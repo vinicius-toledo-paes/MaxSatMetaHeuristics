@@ -7,6 +7,8 @@
 int main(int argc, char *argv[])
 {
 
+    srand(time(NULL));
+
     char heuristica[8];
 
     if (argc < 2)
