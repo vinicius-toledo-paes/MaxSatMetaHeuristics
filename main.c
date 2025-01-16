@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
             }
             else if (valor < 0)
             {
-                santa = (Clause *)malloc(sizeof(Clause));
+                (*santa) = (Clause *)malloc(sizeof(Clause));
                 (*santa)->sinal = COMPLEMENT;
                 (*santa)->literal = &(liter[-(valor + 1)]);
                 (*santa)->next = NULL;
@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
             }
         }
         valor = 1;
-        nescau = (Formula *)malloc(sizeof(Formula));
+        (*nescau) = (Formula *)malloc(sizeof(Formula));
         (*nescau)->clausula = clausula;
         (*nescau)->next = NULL;
         (*nescau) = (*nescau)->next;
