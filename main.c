@@ -81,7 +81,7 @@ int main(int argc, char *argv[]){
     Formula **formula = &nescau;
     while(eof != EOF){
         Clause *santa;
-        Clause **clausula = santa;
+        Clause **clausula = &santa;
         while(valor){
             valor = 0;
             eof = fscanf(fp, "%d*c", &valor);
