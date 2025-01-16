@@ -41,6 +41,9 @@ Clause* addLiteral(Clause *clause, Literal *literal, Sign sinal){
 }
 
 void freeClause(Clause *clause){
+    if (!clause){
+        return;
+    }
     Clause *dyingClause;
 
     dyingClause = clause;
