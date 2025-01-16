@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
         Clause **clausula = &santa;
         while(valor){
             valor = 0;
-            fscanf(fp, " %d*c", &valor);
+            fscanf(fp, "%d ", &valor);
             if (valor > 0){
                 santa = (Clause *) malloc(sizeof(Clause));
                 santa->sinal = IDENTITY;
