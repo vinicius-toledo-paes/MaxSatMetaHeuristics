@@ -174,10 +174,11 @@ Literals *copyLiterals(Literals *liter){
         newLiterals->literal->id = oldLiterals->literal->id;
         newLiterals->literal->valor = UNSOLVED;
 
-        if (!initPointer){
-            initPointer = newLiterals;
+        if (initPointer){
+            newLiterals->next = initPointer;
         }
-        newLiterals = newLiterals->next;
+        initPointer = newLiterals;
+        
         oldLiterals = oldLiterals->next;
     }
 

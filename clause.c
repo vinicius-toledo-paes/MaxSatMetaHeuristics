@@ -66,12 +66,17 @@ void freeSolution(Solution *soluction){
 }
 
 void freeLiterals(Literals *literals){
+    if (!literals){
+        return;
+    }
     Literals *dyingLiteral;
 
     while(literals){
         dyingLiteral = literals;
         literals = literals->next;
-        free(dyingLiteral);
+        if (dyingLiteral){
+            free(dyingLiteral);
+        }
     }
 }
 

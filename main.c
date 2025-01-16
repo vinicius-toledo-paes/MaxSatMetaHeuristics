@@ -126,10 +126,10 @@ int main(int argc, char *argv[])
         lite = (Literals *)malloc(sizeof(Literals));
         lite->literal = &liter[j];
         lite->next = NULL;
-        if (!literals){
-            literals = lite;
+        if (literals){
+            lite->next = literals;
         }
-        lite = lite->next;
+        literals = lite;
     }
 
     int valor = 1;
@@ -172,31 +172,31 @@ int main(int argc, char *argv[])
                 santa->sinal = IDENTITY;
                 santa->literal = &(liter[valor - 1]);
                 santa->next = NULL;
-                if (!clausula){
-                    clausula = santa;
+                if (clausula){
+                    santa->next = clausula;
                 }
-                santa = santa->next;
+                clausula = santa;
             }
-            else if (valor < 0)
+            if (valor < 0)
             {
                 santa = (Clause *)malloc(sizeof(Clause));
                 santa->sinal = COMPLEMENT;
                 santa->literal = &(liter[-(valor + 1)]);
                 santa->next = NULL;
-                if (!clausula){
-                    clausula = santa;
+                if (clausula){
+                    santa->next = clausula;
                 }
-                santa = santa->next;
+                clausula = santa;
             }
         }
         valor = 1;
         nescau = (Formula *)malloc(sizeof(Formula));
         nescau->clausula = clausula;
         nescau->next = NULL;
-        if (!formula){
-            formula = nescau;
+        if (formula){
+            nescau->next = formula;
         }
-        nescau = nescau->next;
+        formula = nescau;
         falta--;
     }
 
