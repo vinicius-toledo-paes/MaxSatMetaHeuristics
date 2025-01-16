@@ -43,26 +43,37 @@ Clause* addLiteral(Clause *clause, Literal *literal, Sign sinal){
 void freeClause(Clause *clause){
     Clause *dyingClause;
 
-    while(clause){
-        dyingClause = clause;
-        clause = clause->next;
+    dyingClause = clause;
+    clause = clause->next;
+    if (dyingClause){
         free(dyingClause);
+        dyingClause = NULL;
     }
+    freeClause(clause);
+    clause = NULL;
 }
 
 void freeFormula(Formula *formula){
-    Formula *dyingFormula;
-
-    while(formula){
-        dyingFormula = formula;
-        formula = formula->next;
-        freeClause(dyingFormula->clausula);
-        free(dyingFormula);
+    if(!formula){
+        return;
     }
+    Formula *dyingFormula;
+    dyingFormula = formula;
+    formula = formula->next;
+    freeClause(dyingFormula->clausula);
+    if (dyingFormula){
+        free(dyingFormula);
+        dyingFormula = NULL;
+    }
+    freeFormula(formula);
+    formula = NULL;
 }
 
 void freeSolution(Solution *soluction){
-    free(soluction);
+    if(soluction){
+        free(soluction);
+        soluction = NULL;
+    }
 }
 
 void freeLiterals(Literals *literals){
@@ -70,14 +81,14 @@ void freeLiterals(Literals *literals){
         return;
     }
     Literals *dyingLiteral;
-
-    while(literals){
-        dyingLiteral = literals;
-        literals = literals->next;
-        if (dyingLiteral){
-            free(dyingLiteral);
-        }
+    dyingLiteral = literals;
+    literals = literals->next;
+    if (dyingLiteral){
+        free(dyingLiteral);
+        dyingLiteral = NULL;
     }
+    freeLiterals(literals);
+    literals = NULL;
 }
 
 void printFormula(Formula *formula){
@@ -86,7 +97,12 @@ void printFormula(Formula *formula){
         Clause *claus = formu->clausula;
         while(claus){
             if (claus->literal){
-                printf("%d ", claus->literal->id);
+                if (claus->sinal == IDENTITY){
+                    printf("%d ", claus->literal->id);
+                }
+                if (claus->sinal == COMPLEMENT){
+                    printf("%d ", -claus->literal->id);
+                }
             }
             claus = claus->next;
         }
