@@ -83,15 +83,8 @@ void freeLiterals(Literals *literals){
     if (!literals){
         return;
     }
-    Literals *dyingLiteral;
-    dyingLiteral = literals;
-    literals = literals->next;
-    if (dyingLiteral){
-        free(dyingLiteral);
-        dyingLiteral = NULL;
-    }
-    freeLiterals(literals);
-    literals = NULL;
+    freeLiterals(literals->next);
+    free(literals);
 }
 
 void printFormula(Formula *formula){

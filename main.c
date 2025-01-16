@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
         falta--;
     }
 
-    printFormula(formula);
+    //printFormula(formula);
 
     int maxClauses;
 
