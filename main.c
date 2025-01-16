@@ -211,7 +211,7 @@ int main(int argc, char *argv[])
 
         tempoInicial = clock();
 
-        maxClauses = tryGreedy(literals, formula, repetitons);
+        maxClauses = tryGreedy(&literals, formula, repetitons);
 
         tempoFinal = clock();
     }
