@@ -44,32 +44,18 @@ void freeClause(Clause *clause){
     if (!clause){
         return;
     }
-    Clause *dyingClause;
-
-    dyingClause = clause;
-    clause = clause->next;
-    if (dyingClause){
-        free(dyingClause);
-        dyingClause = NULL;
-    }
-    freeClause(clause);
-    clause = NULL;
+    freeClause(clause->next);
+    clause->next = NULL;
+    free(clause);
 }
 
 void freeFormula(Formula *formula){
     if(!formula){
         return;
     }
-    Formula *dyingFormula;
-    dyingFormula = formula;
-    formula = formula->next;
-    freeClause(dyingFormula->clausula);
-    if (dyingFormula){
-        free(dyingFormula);
-        dyingFormula = NULL;
-    }
-    freeFormula(formula);
-    formula = NULL;
+    freeFormula(formula->next);
+    formula->next = NULL;
+    free(formula);
 }
 
 void freeSolution(Solution *soluction){
@@ -84,6 +70,7 @@ void freeLiterals(Literals *literals){
         return;
     }
     freeLiterals(literals->next);
+    literals->next = NULL;
     free(literals);
 }
 

@@ -57,6 +57,9 @@ Solution** cloneIndividuals(int numberOfNewIndividuals, Solution *individual){
 }
 
 void freePopulation(int sizeOfPopulation, Solution **population){
+    if (!population){
+        return;
+    }
     for(int i = 0; i < sizeOfPopulation; i++){
         freeLiterals(population[i]->literais);
         freeSolution(population[i]);
