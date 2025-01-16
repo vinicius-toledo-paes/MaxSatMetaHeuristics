@@ -82,17 +82,18 @@ int main(int argc, char *argv[]){
 
     int falta = clausulas;
     while(falta){
-        Clause *santa;
+        Clause *santa = NULL;
         Clause **clausula = &santa;
         while(valor){
-            eof = fscanf(fp, "%d*c", &valor);
-            if ((eof != EOF) && (valor > 0)){
+            valor = 0;
+            fscanf(fp, "%d*c", &valor);
+            if (valor > 0){
                 santa = (Clause *) malloc(sizeof(Clause));
                 santa->sinal = IDENTITY;
                 santa->literal = &liter[valor - 1];
                 santa->next = NULL;
                 santa = santa->next;
-            } else if ((eof != EOF) && (valor < 0)){
+            } else if (valor < 0){
                 santa = (Clause *) malloc(sizeof(Clause));
                 santa->sinal = COMPLEMENT;
                 santa->literal = &liter[-(valor + 1)];
@@ -100,7 +101,7 @@ int main(int argc, char *argv[]){
                 santa = santa->next;
             }
         }
-        if (!valor){
+        if (*clausula){
             valor = 1;
             nescau = (Formula *) malloc(sizeof(Formula));
             nescau->clausula = *clausula;
