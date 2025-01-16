@@ -67,6 +67,7 @@ int main(int argc, char *argv[]){
     sscanf(num, "%d", &literais);
     int clausulas;
     c = '\0';
+    k = 0;
     while(c != ' '){
         c = fgetc(fp);
         if(c != EOF){
@@ -106,6 +107,7 @@ int main(int argc, char *argv[]){
         Clause **clausula = &santa;
         while(valor){
             valor = 0;
+            k = 0;
             while(c != ' ' && c != '\n'){
                 c = fgetc(fp);
                 if(c != EOF){
