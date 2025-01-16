@@ -132,23 +132,23 @@ int main(int argc, char *argv[])
     int valor = 1;
     int eof = 1;
 
-    Formula **nescau;
-    Formula *formula = NULL;
+    Formula *nescau = NULL;
+    Formula **formula = NULL;
 
     int falta = clausulas;
     while (falta)
     {
         if (!formula){
-            nescau = &formula;
+            formula = &nescau;
         }
-        Clause **santa;
-        Clause *clausula = NULL;
+        Clause *santa = NULL;
+        Clause **clausula = NULL;
         while (valor)
         {
             valor = 0;
             k = 0;
             if (!clausula){
-                santa = &clausula;
+                clausula = &santa;
             }
             while (c != ' ' && c != '\n')
             {
@@ -171,30 +171,30 @@ int main(int argc, char *argv[])
             c = '\0';
             if (valor > 0)
             {
-                (*santa) = (Clause *)malloc(sizeof(Clause));
-                (*santa)->sinal = IDENTITY;
-                (*santa)->literal = &(liter[valor - 1]);
-                (*santa)->next = NULL;
-                (*santa) = (*santa)->next;
+                santa = (Clause *)malloc(sizeof(Clause));
+                santa->sinal = IDENTITY;
+                santa->literal = &(liter[valor - 1]);
+                santa->next = NULL;
+                santa = santa->next;
             }
             else if (valor < 0)
             {
-                (*santa) = (Clause *)malloc(sizeof(Clause));
-                (*santa)->sinal = COMPLEMENT;
-                (*santa)->literal = &(liter[-(valor + 1)]);
-                (*santa)->next = NULL;
-                (*santa) = (*santa)->next;
+                santa = (Clause *)malloc(sizeof(Clause));
+                santa->sinal = COMPLEMENT;
+                santa->literal = &(liter[-(valor + 1)]);
+                santa->next = NULL;
+                santa = santa->next;
             }
         }
         valor = 1;
-        (*nescau) = (Formula *)malloc(sizeof(Formula));
-        (*nescau)->clausula = clausula;
-        (*nescau)->next = NULL;
-        (*nescau) = (*nescau)->next;
+        nescau = (Formula *)malloc(sizeof(Formula));
+        nescau->clausula = clausula;
+        nescau->next = NULL;
+        nescau = nescau->next;
         falta--;
     }
 
-    printFormula(formula);
+    printFormula(*formula);
 
     int maxClauses;
 
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
 
         tempoInicial = clock();
 
-        maxClauses = tryGreedy(*literals, formula, repetitons);
+        maxClauses = tryGreedy(*literals, *formula, repetitons);
 
         tempoFinal = clock();
     }
@@ -221,7 +221,7 @@ int main(int argc, char *argv[])
 
         tempoInicial = clock();
 
-        maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, *literals, formula);
+        maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, *literals, *formula);
 
         tempoFinal = clock();
     }
