@@ -1,5 +1,3 @@
-#include <stdlib.h>
-#include <time.h>
 #include "clause.h"
 
 Literals* initLiterals(){
@@ -85,7 +83,9 @@ void printFormula(Formula *formula){
             if (claus->literal){
                 printf("%d ", claus->literal->id);
             }
+            claus = claus->next;
         }
         printf("\n");
+        formu = formu->next;
     }
 }
