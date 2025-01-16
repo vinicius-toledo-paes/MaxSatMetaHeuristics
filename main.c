@@ -180,19 +180,12 @@ int main(int argc, char *argv[])
                 santa = santa->next;
             }
         }
-        if (*clausula)
-        {
-            valor = 1;
-            nescau = (Formula *)malloc(sizeof(Formula));
-            nescau->clausula = *clausula;
-            nescau->next = NULL;
-            nescau = nescau->next;
-            falta--;
-        }
-        else
-        {
-            falta = 0;
-        }
+        valor = 1;
+        nescau = (Formula *)malloc(sizeof(Formula));
+        nescau->clausula = *clausula;
+        nescau->next = NULL;
+        nescau = nescau->next;
+        falta--;
     }
 
     printFormula(*formula);
