@@ -66,7 +66,16 @@ int main(int argc, char *argv[]){
     num[k] = '\0';
     sscanf(num, "%d", &literais);
     int clausulas;
-    fscanf(fp, "%d*c", &clausulas);
+    c = '\0';
+    while(c != ' '){
+        c = fgetc(fp);
+        if(c != EOF){
+            num[k] = c;
+        }
+        k++;
+    }
+    num[k] = '\0';
+    sscanf(num, "%d", &clausulas);
 
     int j;
 
@@ -97,7 +106,15 @@ int main(int argc, char *argv[]){
         Clause **clausula = &santa;
         while(valor){
             valor = 0;
-            fscanf(fp, "%d", &valor);
+            while(c != ' ' && c != '\n'){
+                c = fgetc(fp);
+                if(c != EOF){
+                    num[k] = c;
+                }
+                k++;
+            }
+            num[k] = '\0';
+            sscanf(num, "%d", &valor);
             if (valor > 0){
                 santa = (Clause *) malloc(sizeof(Clause));
                 santa->sinal = IDENTITY;
