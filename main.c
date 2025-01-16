@@ -83,7 +83,6 @@ int main(int argc, char *argv[]){
         Clause *santa;
         Clause **clausula = &santa;
         while(valor){
-            valor = 0;
             eof = fscanf(fp, "%d*c", &valor);
             if ((eof != EOF) && (valor > 0)){
                 santa = (Clause *) malloc(sizeof(Clause));
