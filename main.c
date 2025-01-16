@@ -191,6 +191,8 @@ int main(int argc, char *argv[])
         }
     }
 
+    printFormula(*formula);
+
     int maxClauses;
 
     if ((heuristica[0] == 'g') && (heuristica[1] == 'r') && (heuristica[2] == 'e') && (heuristica[3] == 'e') && (heuristica[4] == 'd') && (heuristica[5] == 'y'))

@@ -49,5 +49,6 @@ void freeClause(Clause *clause);
 void freeFormula(Formula *formula);
 void freeSolution(Solution *soluction);
 void freeLiterals(Literals *literals);
+void printFormula(Formula *formula);
 
 #endif

@@ -76,3 +76,16 @@ void freeLiterals(Literals *literals){
         free(dyingLiteral);
     }
 }
+
+void printFormula(Formula *formula){
+    Formula *formu = formula;
+    while (formu){
+        Clause *claus = formu->clausula;
+        while(claus){
+            if (claus->literal){
+                printf("%d ", claus->literal->id);
+            }
+        }
+        printf("\n");
+    }
+}
