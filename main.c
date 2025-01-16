@@ -100,12 +100,16 @@ int main(int argc, char *argv[]){
                 santa = santa->next;
             }
         }
-        valor = 1;
-        nescau = (Formula *) malloc(sizeof(Formula));
-        nescau->clausula = *clausula;
-        nescau->next = NULL;
-        nescau = nescau->next;
-        falta--;
+        if (!valor){
+            valor = 1;
+            nescau = (Formula *) malloc(sizeof(Formula));
+            nescau->clausula = *clausula;
+            nescau->next = NULL;
+            nescau = nescau->next;
+            falta--;
+        } else {
+            falta = 0;
+        }
     }
 
     int maxClauses;
