@@ -53,7 +53,18 @@ int main(int argc, char *argv[]){
     double tempoFinal;
 
     int literais;
-    fscanf(fp, "%d*c", &literais);
+    int k = 0;
+    char c = '\0';
+    char num[10];
+    while(c != ' '){
+        c = fgetc(fp);
+        if(c != EOF){
+            num[k] = c;
+        }
+        k++;
+    }
+    num[k] = '\0';
+    sscanf(num, "%d", &literais);
     int clausulas;
     fscanf(fp, "%d*c", &clausulas);
 
@@ -86,7 +97,7 @@ int main(int argc, char *argv[]){
         Clause **clausula = &santa;
         while(valor){
             valor = 0;
-            fscanf(fp, "%d ", &valor);
+            fscanf(fp, "%d", &valor);
             if (valor > 0){
                 santa = (Clause *) malloc(sizeof(Clause));
                 santa->sinal = IDENTITY;
