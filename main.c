@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
             heuristica[i] = c;
             heuristica[i+1] = '\0';
         }
-        if (!(heuristica[0] == 'g' && (((heuristica[1] == 'r') && (heuristica[2] == 'e') && (heuristica[3] == 'e') && (heuristica[4] == 'd') && (heuristica[5] == 'y') && (heuristica[6] == '\0')) || ((heuristica[1] == 'e') && (heuristica[2] == 'n') && (heuristica[3] == 'e') && (heuristica[4] == 't') && (heuristica[5] == 'i') && (heuristica[6] == 'c') && (heuristica[7] == '\0'))))){
+        if (!(heuristica[0] == 'g' && (((heuristica[1] == 'r') && (heuristica[2] == 'e') && (heuristica[3] == 'e') && (heuristica[4] == 'd') && (heuristica[5] == 'y')) || ((heuristica[1] == 'e') && (heuristica[2] == 'n') && (heuristica[3] == 'e') && (heuristica[4] == 't') && (heuristica[5] == 'i') && (heuristica[6] == 'c'))))){
             printf("ERRO: heuristica desconhecida");
             exit(1);
         }
