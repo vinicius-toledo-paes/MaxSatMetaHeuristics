@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
     }
     num[k] = '\0';
     sscanf(num, "%d", &clausulas);
-    c = '|0';
+    c = '\0';
 
     int j;
 
