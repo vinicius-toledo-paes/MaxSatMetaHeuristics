@@ -188,7 +188,7 @@ int main(int argc, char *argv[])
         }
         valor = 1;
         nescau = (Formula *)malloc(sizeof(Formula));
-        nescau->clausula = clausula;
+        nescau->clausula = *clausula;
         nescau->next = NULL;
         nescau = nescau->next;
         falta--;
