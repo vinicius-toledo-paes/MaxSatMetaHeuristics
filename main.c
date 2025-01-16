@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
         liter[j].valor = UNSOLVED;
     }
 
-    Literals *lite;
+    Literals *lite = NULL;;
     Literals *literals = NULL;
     for (j = 0; j < literais; j++)
     {

@@ -45,7 +45,6 @@ void freeClause(Clause *clause){
         return;
     }
     freeClause(clause->next);
-    clause->next = NULL;
     free(clause);
 }
 
@@ -54,7 +53,6 @@ void freeFormula(Formula *formula){
         return;
     }
     freeFormula(formula->next);
-    formula->next = NULL;
     free(formula);
 }
 
@@ -70,7 +68,6 @@ void freeLiterals(Literals *literals){
         return;
     }
     freeLiterals(literals->next);
-    literals->next = NULL;
     free(literals);
 }
 
