@@ -167,7 +167,6 @@ Literals *copyLiterals(Literals *liter){
 
     while(oldLiterals){
         newLiterals->literal = (Literal *) malloc(sizeof(Literal));
-        newLiterals->next = NULL;
 
         newLiterals->literal->id = oldLiterals->literal->id;
         newLiterals->literal->valor = UNSOLVED;

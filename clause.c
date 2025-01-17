@@ -80,7 +80,7 @@ void freeLiterals(Literals *literals){
     if (!literals){
         return;
     }
-    if ((literals) && (literals->next)){
+    if (literals){
         freeLiterals(literals->next);
         literals->next = NULL;
     }

@@ -82,16 +82,17 @@ int main(int argc, char *argv[])
 
     Literals *lite = NULL;;
     Literals *literals = NULL;
-    for (j = 0; j < literais; j++)
+    for (j = literais-1; j > -1; j--)
     {
         lite = (Literals *)malloc(sizeof(Literals));
         lite->literal = &liter[j];
-        lite->next = NULL;
-        if (literals){
-            lite->next = literals;
-        }
+        lite->next = literals;
+        
         literals = lite;
+        lite = NULL;
     }
+    
+    printf("%d %d %d %d\n\n\n", literals->literal->id, literals->next->literal->id, literals->next->next->literal->id, literals->next->next->next->literal->id);
 
     int valor = 1;
     int eof = 1;
@@ -132,10 +133,8 @@ int main(int argc, char *argv[])
                 santa = (Clause *)malloc(sizeof(Clause));
                 santa->sinal = IDENTITY;
                 santa->literal = &(liter[valor - 1]);
-                santa->next = NULL;
-                if (clausula){
-                    santa->next = clausula;
-                }
+                santa->next = clausula;
+                
                 clausula = santa;
             }
             if (valor < 0)
@@ -143,10 +142,8 @@ int main(int argc, char *argv[])
                 santa = (Clause *)malloc(sizeof(Clause));
                 santa->sinal = COMPLEMENT;
                 santa->literal = &(liter[-(valor + 1)]);
-                santa->next = NULL;
-                if (clausula){
-                    santa->next = clausula;
-                }
+                santa->next = clausula;
+                
                 clausula = santa;
             }
         }
