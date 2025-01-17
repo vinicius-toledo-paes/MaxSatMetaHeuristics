@@ -9,49 +9,10 @@ int main(int argc, char *argv[])
 
     srand(time(NULL));
 
-    char heuristica[8];
-
     if (argc < 2)
     {
         printf("ERRO: nome de arquivo não encontrado \n\n");
         exit(1);
-    }
-    else if (argc < 3)
-    {
-        if (rand() % 2)
-        {
-            heuristica[0] = 'g';
-            heuristica[1] = 'r';
-            heuristica[2] = 'e';
-            heuristica[3] = 'e';
-            heuristica[4] = 'd';
-            heuristica[5] = 'y';
-            heuristica[6] = '\0';
-        }
-        else
-        {
-            heuristica[0] = 'g';
-            heuristica[1] = 'e';
-            heuristica[2] = 'n';
-            heuristica[3] = 'e';
-            heuristica[4] = 't';
-            heuristica[5] = 'i';
-            heuristica[6] = 'c';
-            heuristica[7] = '\0';
-        }
-    }
-    else
-    {
-        for (char i = 0, c = argv[2][0]; c != '\0' && i < 7; i++, c = argv[2][i])
-        {
-            heuristica[i] = c;
-            heuristica[i + 1] = '\0';
-        }
-        if (!(heuristica[0] == 'g' && (((heuristica[1] == 'r') && (heuristica[2] == 'e') && (heuristica[3] == 'e') && (heuristica[4] == 'd') && (heuristica[5] == 'y')) || ((heuristica[1] == 'e') && (heuristica[2] == 'n') && (heuristica[3] == 'e') && (heuristica[4] == 't') && (heuristica[5] == 'i') && (heuristica[6] == 'c')))))
-        {
-            printf("ERRO: heuristica desconhecida");
-            exit(1);
-        }
     }
 
     FILE *fp = fopen(argv[1], "r");
@@ -200,13 +161,17 @@ int main(int argc, char *argv[])
         falta--;
     }
 
-    //printFormula(formula);
-
+    printFormula(formula);
+    
     int maxClauses;
+    
+    printf("\n\nNumero de literais: %d\n", literais);
+    printf("Numero de clausulas: %d\n\n", clausulas);
+    printf("Heuristica utilizada: greedy\n");
+    printf("Resultados: \n\n");
 
-    if ((heuristica[0] == 'g') && (heuristica[1] == 'r') && (heuristica[2] == 'e') && (heuristica[3] == 'e') && (heuristica[4] == 'd') && (heuristica[5] == 'y'))
-    {
-        printf("Heuristica utilizada: greedy");
+    int i;
+    for(i = 0; i < 10; i++){
         int repetitons = literais;
 
         tempoInicial = clock();
@@ -214,11 +179,15 @@ int main(int argc, char *argv[])
         maxClauses = tryGreedy(&literals, formula, repetitons);
 
         tempoFinal = clock();
+        
+        printf("Maior numero de clausulas satisfeitas durante a execucao %d: %d\n", i, maxClauses);
+        printf("Tempo de execução: %f\n\n", tempoFinal - tempoInicial);
     }
 
-    if ((heuristica[0] == 'g') && (heuristica[1] == 'e') && (heuristica[2] == 'n') && (heuristica[3] == 'e') && (heuristica[4] == 't') && (heuristica[5] == 'i') && (heuristica[6] == 'c'))
-    {
-        printf("Heuristica utilizada: genetic");
+
+    printf("\n\nHeuristica utilizada: genetic\n");
+    printf("Resultados: \n\n");
+    for(i = 0; i < 10; i++){
         int populationSize = clausulas + literais;
         int maxIterations = literais;
         int mrsDeath = literais;
@@ -230,12 +199,11 @@ int main(int argc, char *argv[])
         maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, literals, formula);
 
         tempoFinal = clock();
+        
+        printf("Maior numero de clausulas satisfeitas durante a execucao %d: %d\n", i, maxClauses);
+        printf("Tempo de execução: %f\n\n", tempoFinal - tempoInicial);
     }
 
-    printf("Numero de literais: %d", literais);
-    printf("Numero de clausulas: %d", clausulas);
-    printf("Maior numero de clausulas satisfeitas durante a execucao: %d", maxClauses);
-    printf("Tempo de execução: %f", tempoFinal - tempoInicial);
 
     fclose(fp);
 

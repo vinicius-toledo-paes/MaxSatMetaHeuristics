@@ -1,6 +1,4 @@
-#include <stdlib.h>
-#include <time.h>
-#include "clause.h"
+#include "greedy.h"
 
 Clause** clauseSort(int n, int* lista, Clause** clause){
     int i, j, k, menor;
@@ -169,6 +167,7 @@ Literals *copyLiterals(Literals *liter){
 
     while(oldLiterals){
         newLiterals->literal = (Literal *) malloc(sizeof(Literal));
+        newLiterals->next = NULL;
 
         newLiterals->literal->id = oldLiterals->literal->id;
         newLiterals->literal->valor = UNSOLVED;
@@ -188,7 +187,7 @@ int tryGreedy(Literals **literals, Formula *formula, int numberOfIterations){
     Solution oldSolution;
     Solution newSolution;
 
-    oldSolution.satClauses = 0;
+    oldSolution.satClauses = -1;
     for (int i = 0; i < numberOfIterations; i++){
         newLiteral = copyLiterals(*literals);
         newSolution.literais = newLiteral;
@@ -196,17 +195,20 @@ int tryGreedy(Literals **literals, Formula *formula, int numberOfIterations){
 
         if (newSolution.satClauses > oldSolution.satClauses){
             oldSolution.satClauses = newSolution.satClauses;
-            Literals *temp = newSolution.literais;
-            newSolution.literais = oldSolution.literais;
-            oldSolution.literais = temp;
-            newLiteral = newSolution.literais;
+            freeLiterals(oldSolution.literais);
+            oldSolution.literais = NULL;
+            oldSolution.literais = copyLiterals(newSolution.literais);
+            freeLiterals(newSolution.literais);
+            newSolution.literais = NULL;
         }
 
         freeLiterals(newLiteral);
         newLiteral = NULL;
     }
     freeLiterals(*literals);
-    *literals = oldSolution.literais;
+    *literals = NULL;
+    *literals = copyLiterals(oldSolution.literais);
+    freeLiterals(oldSolution.literais);
 
     return oldSolution.satClauses;
 }

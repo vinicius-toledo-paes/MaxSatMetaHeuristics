@@ -1,6 +1,4 @@
-#include <stdlib.h>
-#include <time.h>
-#include "clause.h"
+#include "genetic.h"
 
 Solution* generateIndividual(Literals *blueprint){
     Solution *individual = (Solution *) malloc(sizeof(Solution));
