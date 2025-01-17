@@ -2,14 +2,21 @@
 #include <time.h>
 #include "clause.h"
 
-Solution* generateIndividual(Literals *blueprint);
-Solution* cloneIndividual(Solution *individual);
-Solution* breedIndividuals(Solution *individual1, Solution *individual2);
-Solution** cloneIndividuals(int numberOfNewIndividuals, Solution *individual);
-Solution** completePopulation(int originalPopulationSize, int oldPopulationSize, int numberOfNewIndividuals, Solution **population, Literals *originalIndividual);
-Solution** genetic(int sizeOfPopulation, int maxIterations, int deathsPerIteration, int offspringsPerIteration, int mutationProbability, Literals *literais, Formula *formula);
-int bestGenes(int sizeOfPopulation, int maxIterations, int deathsPerIteration, int offspringsPerIteration, int mutationProbability, Literals *literais, Formula *formula);
-void freePopulation(int sizeOfPopulation, Solution **population);
-void mutateIndividual(Solution *individual, int mutationProbability);
-void countSatClauses(int sizeOfPoputation, Solution **population, Formula *formula);
-void qualifyIndividuals(int numberOfIndividuals, Solution **individuals);
+
+typedef struct {
+    Literal **literais;
+    int geneSize;
+    int satClauses;
+} Individual;
+
+Individual* cloneIndividual(Individual *individual);
+Individual* generateIndividual(Literal *blueprint, int geneSize);
+Individual* breedIndividuals(Individual *individual1, Individual *individual2);
+//Individual** cloneIndividuals(int numberOfNewIndividuals, Individual *individual);
+Individual** completePopulation(int originalPopulationSize, int oldPopulationSize, int numberOfNewIndividuals, int geneSize, Individual **population, Literals *originalIndividual);
+Individual** genetic(int sizeOfPopulation, int maxIterations, int deathsPerIteration, int offspringsPerIteration, int mutationProbability, int geneSize, Literal *literais, Formula *formula);
+int bestGenes(int sizeOfPopulation, int maxIterations, int deathsPerIteration, int offspringsPerIteration, int mutationProbability, int geneSize, Literal *literais, Formula *formula);
+void freePopulation(int sizeOfPopulation, Individual **population);
+void mutateIndividual(Individual *individual, int mutationProbability);
+void countSatClauses(int sizeOfPoputation, Individual **population, Formula *formula);
+void qualifyIndividuals(int numberOfIndividuals, Individual **individuals);

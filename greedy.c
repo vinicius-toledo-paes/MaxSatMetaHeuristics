@@ -181,6 +181,16 @@ Literals *copyLiterals(Literals *liter){
 }
 
 int tryGreedy(Literals **literals, Formula *formula, int numberOfIterations){
+    
+    Solution solucao;
+    solucao.literais = *literals;
+    solucao.satClauses = 0;
+    
+    greedy(&solucao, formula);
+    
+    return solucao.satClauses;
+    
+    /*
     Literals *newLiteral;
 
     Solution oldSolution;
@@ -192,7 +202,7 @@ int tryGreedy(Literals **literals, Formula *formula, int numberOfIterations){
         newSolution.literais = newLiteral;
         greedy(&newSolution, formula);
 
-        if (newSolution.satClauses > oldSolution.satClauses){
+        if (0 && newSolution.satClauses > oldSolution.satClauses){
             oldSolution.satClauses = newSolution.satClauses;
             freeLiterals(oldSolution.literais);
             oldSolution.literais = NULL;
@@ -208,6 +218,7 @@ int tryGreedy(Literals **literals, Formula *formula, int numberOfIterations){
     *literals = NULL;
     *literals = copyLiterals(oldSolution.literais);
     freeLiterals(oldSolution.literais);
-
+    
     return oldSolution.satClauses;
+    */
 }

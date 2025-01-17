@@ -88,12 +88,11 @@ int main(int argc, char *argv[])
         lite->literal = &liter[j];
         lite->next = literals;
         
+        literals = NULL;
         literals = lite;
         lite = NULL;
     }
     
-    printf("%d %d %d %d\n\n\n", literals->literal->id, literals->next->literal->id, literals->next->next->literal->id, literals->next->next->next->literal->id);
-
     int valor = 1;
     int eof = 1;
 
@@ -174,10 +173,14 @@ int main(int argc, char *argv[])
         tempoInicial = clock();
 
         maxClauses = tryGreedy(&literals, formula, repetitons);
+        
+        for (j = 0; j < literais; j ++){
+            liter[j].valor = UNSOLVED;
+        }
 
         tempoFinal = clock();
         
-        printf("Maior numero de clausulas satisfeitas durante a execucao %d: %d\n", i, maxClauses);
+        printf("O numero de clausulas satisfeitas durante a execucao %d: %d\n", i, maxClauses);
         printf("Tempo de execução: %f\n\n", tempoFinal - tempoInicial);
     }
 
@@ -190,10 +193,11 @@ int main(int argc, char *argv[])
         int mrsDeath = literais;
         int mrLife = clausulas;
         int mutationProbability = literais;
+        int geneSize = literais;
 
         tempoInicial = clock();
 
-        maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, literals, formula);
+        maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, geneSize, liter, formula);
 
         tempoFinal = clock();
         

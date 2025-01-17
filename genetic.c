@@ -1,13 +1,31 @@
 #include "genetic.h"
 
-Solution* generateIndividual(Literals *blueprint){
-    Solution *individual = (Solution *) malloc(sizeof(Solution));
-    Literals *gene = individual->literais;
+Individual* generateIndividual(Literal *blueprint, int geneSize){
+    Individual *individual = (Individual *) malloc(sizeof(Individual));
+    individual->geneSize = geneSize;
+    individual->literais = (Literal **) malloc(geneSize * sizeof(Literal*));
 
+    for (int i = 0; i < geneSize; i++){
+        individual->literais[i] = (Literal *) malloc(sizeof(Literal));
+        individual->literais[i]->id = blueprint[i].id;
+        if (rand()%2){
+            individual->literais[i]->valor = TRUE;
+        }else {
+            individual->literais[i]->valor = FALSE;
+        }
+    }
+    
+
+    /*
+    Literals *gene;
+    individual->literais = gene;
+
+    
     while(blueprint){
         gene = (Literals *) malloc(sizeof(Literals));
         gene->literal = (Literal *) malloc(sizeof(Literal));
         gene->literal->id = blueprint->literal->id;
+        gene->next = NULL;
         
         if(rand()%2){
             gene->literal->valor = TRUE;
@@ -17,18 +35,27 @@ Solution* generateIndividual(Literals *blueprint){
 
         gene = gene->next;
         blueprint = blueprint->next;
+
     }
-
-    gene->next = NULL;
-
+    */
     individual->satClauses = 0;
 
     return individual;
 }
 
-Solution* cloneIndividual(Solution *individual){
-    Solution *newIndividual = (Solution *) malloc(sizeof(Solution));
+Individual* cloneIndividual(Individual *individual){
+    Individual *newIndividual = (Individual *) malloc(sizeof(Individual));
 
+    newIndividual->geneSize = individual->geneSize;
+    newIndividual->literais = (Literal **) malloc(individual->geneSize * sizeof(Literal*));
+
+    for(int i = 0; i < individual->geneSize; i++){
+        newIndividual->literais[i] = (Literal *) malloc(sizeof(Literal));
+        newIndividual->literais[i]->id = individual->literais[i]->id;
+        newIndividual->literais[i]->valor = individual->literais[i]->valor;
+    }
+
+    /*
     Literals *newLiteral = newIndividual->literais;
     for(Literals *l = individual->literais; l; l = l->next){
         newLiteral = (Literals *) malloc(sizeof(Literals));
@@ -38,14 +65,15 @@ Solution* cloneIndividual(Solution *individual){
         newLiteral = newLiteral->next;
     }
     newLiteral = NULL;
-
+    */
     newIndividual->satClauses = individual->satClauses;
 
     return newIndividual;
 }
 
-Solution** cloneIndividuals(int numberOfNewIndividuals, Solution *individual){
-    Solution **solucoes = (Solution **) malloc(numberOfNewIndividuals * sizeof(Solution *));
+/*
+Individual** cloneIndividuals(int numberOfNewIndividuals, Individual *individual){
+    Individual **solucoes = (Individual **) malloc(numberOfNewIndividuals * sizeof(Individual *));
     
     for (int i = 0; i < numberOfNewIndividuals; i++){
         solucoes[i] = cloneIndividual(individual);
@@ -53,24 +81,28 @@ Solution** cloneIndividuals(int numberOfNewIndividuals, Solution *individual){
 
     return solucoes;
 }
+*/
 
-void freePopulation(int sizeOfPopulation, Solution **population){
+void freePopulation(int sizeOfPopulation, Individual **population){
     if (!population){
         return;
     }
     for(int i = 0; i < sizeOfPopulation; i++){
-        freeLiterals(population[i]->literais);
-        freeSolution(population[i]);
+        for(int j = 0; j < population[i]->geneSize; j++){
+            free(population[i]->literais[j]);
+        }
+        free(population[i]->literais);
+        free(population[i]);
     }
     if (population){
         free(population);
     }
 }
 
-Solution** completePopulation(int originalPopulationSize, int oldPopulationSize, int numberOfNewIndividuals, Solution **population, Literals *originalIndividual){
+Individual** completePopulation(int originalPopulationSize, int oldPopulationSize, int numberOfNewIndividuals, int geneSize, Individual **population, Literals *originalIndividual){
     int i;
 
-    Solution **newPopulation = (Solution **) malloc((oldPopulationSize + numberOfNewIndividuals) * sizeof(Solution *));
+    Individual **newPopulation = (Individual **) malloc((oldPopulationSize + numberOfNewIndividuals) * sizeof(Individual *));
 
     for(i = 0; i < oldPopulationSize; i++){
         newPopulation[i] = cloneIndividual(population[i]);
@@ -79,14 +111,33 @@ Solution** completePopulation(int originalPopulationSize, int oldPopulationSize,
     freePopulation(originalPopulationSize, population);
 
     for(i = oldPopulationSize; i < oldPopulationSize + numberOfNewIndividuals; i++){
-        newPopulation[i] = generateIndividual(originalIndividual);
+        newPopulation[i] = generateIndividual(originalIndividual, geneSize);
     }
 
     return newPopulation;
 }
 
-Solution* breedIndividuals(Solution *individual1, Solution *individual2){
-    Solution *offspring = (Solution *) malloc(sizeof(Solution));
+Individual* breedIndividuals(Individual *individual1, Individual *individual2){
+    Individual *offspring = (Individual *) malloc(sizeof(Individual));
+    offspring->satClauses = 0;
+    offspring->geneSize = individual1->geneSize;
+    offspring->literais = (Literal **) malloc(individual1->geneSize * sizeof(Literal*));
+
+    for(int i = 0; i < individual1->geneSize && i < individual2->geneSize; i++){
+        offspring->literais[i] = (Literal *) malloc(sizeof(Literal));
+        offspring->literais[i]->id = individual1->literais[i]->id;
+        if (individual1->literais[i]->valor == individual2->literais[i]->valor){
+            offspring->literais[i]->valor = individual1->literais[i]->valor;
+        } else {
+            if (rand()%2){
+                offspring->literais[i]->valor = individual1->literais[i]->valor;
+            } else {
+                offspring->literais[i]->valor = individual2->literais[i]->valor;
+            }
+        }
+    }
+
+    /*
     Literals *offspringGene = offspring->literais;
 
     Literals *gene1 = individual1->literais;
@@ -113,10 +164,24 @@ Solution* breedIndividuals(Solution *individual1, Solution *individual2){
 
     offspring->satClauses = 0;
 
+    */
+
     return offspring;
 }
 
-void mutateIndividual(Solution *individual, int mutationProbability){
+void mutateIndividual(Individual *individual, int mutationProbability){
+
+    for(int i = 0; i < individual->geneSize; i++){
+        if (!rand()%mutationProbability){
+            if (individual->literais[i]->valor == TRUE){
+                individual->literais[i]->valor = FALSE;
+            } else{
+                individual->literais[i]->valor = TRUE;
+            }
+        }
+    }
+
+    /*
     Literals *gene = individual->literais;
 
     while(gene){
@@ -137,26 +202,27 @@ void mutateIndividual(Solution *individual, int mutationProbability){
         }
         gene->literal->valor = valor;
     }
+    */
 }
 
-void qualifyIndividuals(int numberOfIndividuals, Solution **individuals){
+void qualifyIndividuals(int numberOfIndividuals, Individual **individuals){
     for(int i = 0; i < numberOfIndividuals; i++){
         int k = i;
         for(int j = i + 1; j < numberOfIndividuals; j++){
-            if (individuals[j] > individuals[ k]){
+            if (individuals[j]->satClauses > individuals[k]->satClauses){
                 k = j;
             }
         }
 
         if (k != i){
-            Solution *temp = individuals[i];
+            Individual *temp = individuals[i];
             individuals[i] = individuals[k];
             individuals[k] = temp;
         }
     }
 }
 
-void countSatClauses(int sizeOfPoputation, Solution **population, Formula *formula){
+void countSatClauses(int sizeOfPoputation, Individual **population, Formula *formula){
     for(int i = 0; i < sizeOfPoputation; i++){
         population[i]->satClauses = 0;
         Formula *temporaryFormula = formula;
@@ -164,7 +230,7 @@ void countSatClauses(int sizeOfPoputation, Solution **population, Formula *formu
             int sat = 0;
             Clause *temporaryClause = temporaryFormula->clausula;
             while(temporaryClause && !sat){
-                if((temporaryClause->literal->valor == TRUE && temporaryClause->sinal == IDENTITY) || (temporaryClause->literal->valor == FALSE && temporaryClause->sinal == COMPLEMENT)){
+                if((population[i]->literais[temporaryClause->literal->id - 1]->valor == TRUE && temporaryClause->sinal == IDENTITY) || (population[i]->literais[temporaryClause->literal->id - 1]->valor == FALSE && temporaryClause->sinal == COMPLEMENT)){
                     sat = 1;
                     (population[i]->satClauses)++;
                 }
@@ -175,15 +241,15 @@ void countSatClauses(int sizeOfPoputation, Solution **population, Formula *formu
     }
 }
 
-Solution** genetic(int sizeOfPopulation, int maxIterations, int deathsPerIteration, int offspringsPerIteration, int mutationProbability, Literals *literais, Formula *formula){
+Individual** genetic(int sizeOfPopulation, int maxIterations, int deathsPerIteration, int offspringsPerIteration, int mutationProbability, int geneSize, Literal *literais, Formula *formula){
     int i, j;
 
-    Solution **population = completePopulation(0, 0, sizeOfPopulation, NULL, literais);
+    Individual **population = completePopulation(0, 0, sizeOfPopulation, geneSize, NULL, literais);
 
     for(j = 0; j < maxIterations; j++){
         countSatClauses(sizeOfPopulation, population, formula);
 
-        Solution **newPopulation = (Solution **) malloc(sizeof(Solution));
+        Individual **newPopulation = (Individual **) malloc(sizeof(Individual));
 
         qualifyIndividuals(sizeOfPopulation, population);
 
@@ -204,7 +270,7 @@ Solution** genetic(int sizeOfPopulation, int maxIterations, int deathsPerIterati
         countSatClauses(sizeOfPopulation, newPopulation, formula);
         qualifyIndividuals(sizeOfPopulation, newPopulation);
 
-        population = completePopulation(sizeOfPopulation, sizeOfPopulation - deathsPerIteration, deathsPerIteration, newPopulation, literais);
+        population = completePopulation(sizeOfPopulation, sizeOfPopulation - deathsPerIteration, deathsPerIteration, geneSize, newPopulation, literais);
     }
 
     qualifyIndividuals(sizeOfPopulation, population);
@@ -212,9 +278,9 @@ Solution** genetic(int sizeOfPopulation, int maxIterations, int deathsPerIterati
     return population;
 }
 
-int bestGenes(int sizeOfPopulation, int maxIterations, int deathsPerIteration, int offspringsPerIteration, int mutationProbability, Literals *literais, Formula *formula){
+int bestGenes(int sizeOfPopulation, int maxIterations, int deathsPerIteration, int offspringsPerIteration, int mutationProbability, int geneSize, Literal *literais, Formula *formula){
 
-    Solution **people = genetic(sizeOfPopulation, maxIterations, deathsPerIteration, offspringsPerIteration, mutationProbability, literais, formula);
+    Individual **people = genetic(sizeOfPopulation, maxIterations, deathsPerIteration, offspringsPerIteration, mutationProbability, geneSize, literais, formula);
 
     qualifyIndividuals(sizeOfPopulation, people);
 
