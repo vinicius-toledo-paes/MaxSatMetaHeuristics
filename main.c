@@ -188,11 +188,11 @@ int main(int argc, char *argv[])
     printf("\n\nHeuristica utilizada: genetic\n");
     printf("Resultados: \n\n");
     for(i = 0; i < 10; i++){
-        int populationSize = clausulas + literais;
-        int maxIterations = literais;
-        int mrsDeath = literais;
-        int mrLife = clausulas;
-        int mutationProbability = literais;
+        int populationSize = 100;
+        int maxIterations = 50;
+        int mrsDeath = 50;
+        int mrLife = 60;
+        int mutationProbability = 1000;
         int geneSize = literais;
 
         tempoInicial = clock();
@@ -202,7 +202,7 @@ int main(int argc, char *argv[])
         tempoFinal = clock();
         
         printf("Maior numero de clausulas satisfeitas durante a execucao %d: %d\n", i, maxClauses);
-        printf("Tempo de execução: %f\n\n", tempoFinal - tempoInicial);
+        printf("Tempo de execução: %f segundos\n\n", (tempoFinal - tempoInicial)/CLOCKS_PER_SEC);
     }
 
 

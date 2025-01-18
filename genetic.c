@@ -43,13 +43,13 @@ Individual* generateIndividual(Literal *blueprint, int geneSize){
     return individual;
 }
 
-Individual* cloneIndividual(Individual *individual){
+Individual* cloneIndividual(Individual *individual, int geneSize){
     Individual *newIndividual = (Individual *) malloc(sizeof(Individual));
 
-    newIndividual->geneSize = individual->geneSize;
+    newIndividual->geneSize = geneSize;
     newIndividual->literais = (Literal **) malloc(individual->geneSize * sizeof(Literal*));
 
-    for(int i = 0; i < individual->geneSize; i++){
+    for(int i = 0; i < (individual->geneSize); i++){
         newIndividual->literais[i] = (Literal *) malloc(sizeof(Literal));
         newIndividual->literais[i]->id = individual->literais[i]->id;
         newIndividual->literais[i]->valor = individual->literais[i]->valor;
@@ -83,12 +83,12 @@ Individual** cloneIndividuals(int numberOfNewIndividuals, Individual *individual
 }
 */
 
-void freePopulation(int sizeOfPopulation, Individual **population){
+void freePopulation(int sizeOfPopulation, Individual **population, int geneSize){
     if (!population){
         return;
     }
     for(int i = 0; i < sizeOfPopulation; i++){
-        for(int j = 0; j < population[i]->geneSize; j++){
+        for(int j = 0; j < geneSize; j++){
             free(population[i]->literais[j]);
         }
         free(population[i]->literais);
@@ -99,16 +99,16 @@ void freePopulation(int sizeOfPopulation, Individual **population){
     }
 }
 
-Individual** completePopulation(int originalPopulationSize, int oldPopulationSize, int numberOfNewIndividuals, int geneSize, Individual **population, Literals *originalIndividual){
+Individual** completePopulation(int originalPopulationSize, int oldPopulationSize, int numberOfNewIndividuals, int geneSize, Individual **population, Literal *originalIndividual){
     int i;
 
     Individual **newPopulation = (Individual **) malloc((oldPopulationSize + numberOfNewIndividuals) * sizeof(Individual *));
 
     for(i = 0; i < oldPopulationSize; i++){
-        newPopulation[i] = cloneIndividual(population[i]);
+        newPopulation[i] = cloneIndividual(population[i], geneSize);
     }
 
-    freePopulation(originalPopulationSize, population);
+    freePopulation(originalPopulationSize, population, geneSize);
 
     for(i = oldPopulationSize; i < oldPopulationSize + numberOfNewIndividuals; i++){
         newPopulation[i] = generateIndividual(originalIndividual, geneSize);
@@ -117,13 +117,13 @@ Individual** completePopulation(int originalPopulationSize, int oldPopulationSiz
     return newPopulation;
 }
 
-Individual* breedIndividuals(Individual *individual1, Individual *individual2){
+Individual* breedIndividuals(Individual *individual1, Individual *individual2, int geneSize){
     Individual *offspring = (Individual *) malloc(sizeof(Individual));
     offspring->satClauses = 0;
-    offspring->geneSize = individual1->geneSize;
+    offspring->geneSize = geneSize;
     offspring->literais = (Literal **) malloc(individual1->geneSize * sizeof(Literal*));
 
-    for(int i = 0; i < individual1->geneSize && i < individual2->geneSize; i++){
+    for(int i = 0; i < geneSize; i++){
         offspring->literais[i] = (Literal *) malloc(sizeof(Literal));
         offspring->literais[i]->id = individual1->literais[i]->id;
         if (individual1->literais[i]->valor == individual2->literais[i]->valor){
@@ -169,14 +169,14 @@ Individual* breedIndividuals(Individual *individual1, Individual *individual2){
     return offspring;
 }
 
-void mutateIndividual(Individual *individual, int mutationProbability){
+void mutateIndividual(Individual *individual, int mutationProbability, int geneSize){
 
-    for(int i = 0; i < individual->geneSize; i++){
+    for(int i = 0; i < geneSize; i++){
         if (!rand()%mutationProbability){
-            if (individual->literais[i]->valor == TRUE){
-                individual->literais[i]->valor = FALSE;
+            if ((individual->literais[i]->valor) == TRUE){
+                (individual->literais[i]->valor) = FALSE;
             } else{
-                individual->literais[i]->valor = TRUE;
+                (individual->literais[i]->valor) = TRUE;
             }
         }
     }
@@ -209,7 +209,7 @@ void qualifyIndividuals(int numberOfIndividuals, Individual **individuals){
     for(int i = 0; i < numberOfIndividuals; i++){
         int k = i;
         for(int j = i + 1; j < numberOfIndividuals; j++){
-            if (individuals[j]->satClauses > individuals[k]->satClauses){
+            if ((individuals[j]->satClauses) > (individuals[k]->satClauses)){
                 k = j;
             }
         }
@@ -230,13 +230,13 @@ void countSatClauses(int sizeOfPoputation, Individual **population, Formula *for
             int sat = 0;
             Clause *temporaryClause = temporaryFormula->clausula;
             while(temporaryClause && !sat){
-                if((population[i]->literais[temporaryClause->literal->id - 1]->valor == TRUE && temporaryClause->sinal == IDENTITY) || (population[i]->literais[temporaryClause->literal->id - 1]->valor == FALSE && temporaryClause->sinal == COMPLEMENT)){
+                if(((population[i]->literais[(temporaryClause->literal->id) - 1]->valor) == TRUE && (temporaryClause->sinal) == IDENTITY) || ((population[i]->literais[(temporaryClause->literal->id) - 1]->valor) == FALSE && (temporaryClause->sinal) == COMPLEMENT)){
                     sat = 1;
                     (population[i]->satClauses)++;
                 }
-                temporaryClause = temporaryClause->next;
+                temporaryClause = (temporaryClause->next);
             }
-            temporaryFormula = temporaryFormula->next;
+            temporaryFormula = (temporaryFormula->next);
         }
     }
 }
@@ -253,18 +253,18 @@ Individual** genetic(int sizeOfPopulation, int maxIterations, int deathsPerItera
 
         qualifyIndividuals(sizeOfPopulation, population);
 
-        for(i = 0; i < sizeOfPopulation - offspringsPerIteration; i++){
-            newPopulation[i] = cloneIndividual(population[i]);
+        for(i = 0; i < (sizeOfPopulation - offspringsPerIteration); i++){
+            newPopulation[i] = cloneIndividual(population[i], geneSize);
         }
 
         for(i = sizeOfPopulation - offspringsPerIteration; i < sizeOfPopulation; i++){
-            newPopulation[i] = breedIndividuals(population[rand()%sizeOfPopulation], population[rand()%sizeOfPopulation]);
+            newPopulation[i] = breedIndividuals(population[rand()%sizeOfPopulation], population[rand()%sizeOfPopulation], geneSize);
         }
 
-        freePopulation(sizeOfPopulation, population);
+        freePopulation(sizeOfPopulation, population, geneSize);
 
         for(i = 0; i < sizeOfPopulation; i++){
-            mutateIndividual(newPopulation[i], mutationProbability);
+            mutateIndividual(newPopulation[i], mutationProbability, geneSize);
         }
 
         countSatClauses(sizeOfPopulation, newPopulation, formula);
@@ -286,7 +286,7 @@ int bestGenes(int sizeOfPopulation, int maxIterations, int deathsPerIteration, i
 
     int valor = people[0]->satClauses;
 
-    freePopulation(sizeOfPopulation, people);
+    freePopulation(sizeOfPopulation, people, geneSize);
 
     return valor;
 }
