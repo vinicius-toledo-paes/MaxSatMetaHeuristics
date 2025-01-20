@@ -161,10 +161,16 @@ int main(int argc, char *argv[])
     
     int maxClauses;
     
+
+    
+
     printf("\n\nNumero de literais: %d\n", literais);
     printf("Numero de clausulas: %d\n\n", clausulas);
 
-    printf("Execucao Preliminar: \n");
+
+
+    ///* Começo da abordagem gulosa:
+
     printf("Heuristica utilizada: greedy\n");
     printf("Resultados: \n\n");
     
@@ -182,18 +188,15 @@ int main(int argc, char *argv[])
 
     tempoFinal = clock();
 
-    ///* print para a execução da geração de solução inicial do genético
-    printf("O numero de clausulas satisfeitas durante a execucao preliminar: %d\n", maxClauses);
-    //*/
-
-    /* print para a execução do método guloso
     printf("O maior numero de clausulas satisfeitas pelo metodo foi: %d", maxClauses);
-    */
     printf("Tempo de execução: %f segundos\n\n", (tempoFinal - tempoInicial)/CLOCKS_PER_SEC);
+
+    //  Fim da abordagem gulosa */
+
+
+
+    ///* começo da abordagem genética
     
-    ///* Abordagem genética
-    
-    printf("\n\nExecucao Final: \n");
     printf("Heuristica utilizada: genetic\n");
     printf("Resultado: \n\n");
     
@@ -210,10 +213,10 @@ int main(int argc, char *argv[])
 
     tempoFinal = clock();
     
-    printf("Maior numero de clausulas satisfeitas durante a execucao final: %d\n", maxClauses);
+    printf("Maior numero de clausulas satisfeitas durante a execucao: %d\n", maxClauses);
     printf("Tempo de execução: %f segundos\n\n", (tempoFinal - tempoInicial)/CLOCKS_PER_SEC);
 
-    //*/
+    // Fim da abordagem genética   */
 
     fclose(fp);
 
