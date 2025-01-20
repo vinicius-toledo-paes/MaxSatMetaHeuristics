@@ -20,7 +20,8 @@ typedef struct lits{
 } Literals;
 
 typedef struct{
-    Literals *literais;
+    Literal **literais;
+    int numberOfLiterals;
     int satClauses;
 } Solution;
 

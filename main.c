@@ -163,48 +163,57 @@ int main(int argc, char *argv[])
     
     printf("\n\nNumero de literais: %d\n", literais);
     printf("Numero de clausulas: %d\n\n", clausulas);
+
+    printf("Execucao Preliminar: \n");
     printf("Heuristica utilizada: greedy\n");
     printf("Resultados: \n\n");
-
-    int i;
-    for(i = 0; i < 10; i++){
-        int repetitons = literais;
-
-        tempoInicial = clock();
-
-        maxClauses = tryGreedy(&literals, formula, repetitons);
+    
         
-        for (j = 0; j < literais; j ++){
-            liter[j].valor = UNSOLVED;
-        }
-
-        tempoFinal = clock();
-        
-        printf("O numero de clausulas satisfeitas durante a execucao %d: %d\n", i, maxClauses);
-        printf("Tempo de execução: %f\n\n", tempoFinal - tempoInicial);
+    for (j = 0; j < literais; j ++){
+        liter[j].valor = UNSOLVED;
     }
 
+    int numberOfLiterals = literais;
+    int repetitons = numberOfLiterals + 1;
 
-    printf("\n\nHeuristica utilizada: genetic\n");
-    printf("Resultados: \n\n");
-    for(i = 0; i < 10; i++){
-        int populationSize = 100;
-        int maxIterations = 50;
-        int mrsDeath = 50;
-        int mrLife = 60;
-        int mutationProbability = 1000;
-        int geneSize = literais;
+    tempoInicial = clock();
 
-        tempoInicial = clock();
+    maxClauses = tryGreedy(&liter, formula, repetitons, numberOfLiterals);
 
-        maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, geneSize, liter, formula);
+    tempoFinal = clock();
 
-        tempoFinal = clock();
-        
-        printf("Maior numero de clausulas satisfeitas durante a execucao %d: %d\n", i, maxClauses);
-        printf("Tempo de execução: %f segundos\n\n", (tempoFinal - tempoInicial)/CLOCKS_PER_SEC);
-    }
+    ///* print para a execução da geração de solução inicial do genético
+    printf("O numero de clausulas satisfeitas durante a execucao preliminar: %d\n", maxClauses);
+    //*/
 
+    /* print para a execução do método guloso
+    printf("O maior numero de clausulas satisfeitas pelo metodo foi: %d", maxClauses);
+    */
+    printf("Tempo de execução: %f segundos\n\n", (tempoFinal - tempoInicial)/CLOCKS_PER_SEC);
+    
+    ///* Abordagem genética
+    
+    printf("\n\nExecucao Final: \n");
+    printf("Heuristica utilizada: genetic\n");
+    printf("Resultado: \n\n");
+    
+    int populationSize = clausulas + literais;
+    int maxIterations = (int) (populationSize / 2) + 1;
+    int mrsDeath = (int) (5625 * populationSize / 10000) + 1;
+    int mrLife = (int) (625 * populationSize / 1000) + 1;
+    int geneSize = literais;
+    int mutationProbability = (int) (populationSize / (geneSize + 1));
+
+    tempoInicial = clock();
+
+    maxClauses = bestGenes(populationSize, maxIterations, mrsDeath, mrLife, mutationProbability, geneSize, liter, formula);
+
+    tempoFinal = clock();
+    
+    printf("Maior numero de clausulas satisfeitas durante a execucao final: %d\n", maxClauses);
+    printf("Tempo de execução: %f segundos\n\n", (tempoFinal - tempoInicial)/CLOCKS_PER_SEC);
+
+    //*/
 
     fclose(fp);
 

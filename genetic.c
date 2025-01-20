@@ -71,17 +71,37 @@ Individual* cloneIndividual(Individual *individual, int geneSize){
     return newIndividual;
 }
 
-/*
-Individual** cloneIndividuals(int numberOfNewIndividuals, Individual *individual){
+
+Individual** cloneIndividuals(int numberOfNewIndividuals, Literal *individual, int geneSize){
+    int i;
+
     Individual **solucoes = (Individual **) malloc(numberOfNewIndividuals * sizeof(Individual *));
-    
-    for (int i = 0; i < numberOfNewIndividuals; i++){
-        solucoes[i] = cloneIndividual(individual);
+
+    Individual *indie = (Individual *) malloc(sizeof(Individual));
+
+    indie->geneSize = geneSize;
+    indie->satClauses = 0;
+    indie->literais = (Literal **) malloc(sizeof(Literal *));
+
+    for (i = 0; i < geneSize; i++){
+        indie->literais[i] = (Literal *) malloc(sizeof(Literal));
+        indie->literais[i]->id = individual[i].id;
+        indie->literais[i]->valor = individual[i].valor;
     }
+    
+    for (i = 0; i < numberOfNewIndividuals; i++){
+        solucoes[i] = cloneIndividual(indie, geneSize);
+    }
+
+    for (i = 0; i < geneSize; i++){
+        free(indie->literais[i]);
+    }
+    free(indie->literais);
+    free(indie);
 
     return solucoes;
 }
-*/
+
 
 void freePopulation(int sizeOfPopulation, Individual **population, int geneSize){
     if (!population){
@@ -249,7 +269,7 @@ Individual** genetic(int sizeOfPopulation, int maxIterations, int deathsPerItera
     for(j = 0; j < maxIterations; j++){
         countSatClauses(sizeOfPopulation, population, formula);
 
-        Individual **newPopulation = (Individual **) malloc(sizeof(Individual));
+        Individual **newPopulation = (Individual **) malloc(sizeOfPopulation * sizeof(Individual*));
 
         qualifyIndividuals(sizeOfPopulation, population);
 
@@ -263,7 +283,7 @@ Individual** genetic(int sizeOfPopulation, int maxIterations, int deathsPerItera
 
         freePopulation(sizeOfPopulation, population, geneSize);
 
-        for(i = 0; i < sizeOfPopulation; i++){
+        for(i = 1; i < sizeOfPopulation; i++){
             mutateIndividual(newPopulation[i], mutationProbability, geneSize);
         }
 

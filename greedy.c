@@ -160,7 +160,21 @@ void greedy(Solution *soluction, Formula *formula){
     freeFormula(newFormula);
 }
 
-Literals *copyLiterals(Literals *liter){
+Literal **copyLiterals(Literal *liter, int numberOfLiterals){
+
+    Literal **literal = (Literal **) malloc(numberOfLiterals * sizeof(Literal *));
+
+    for (int i = 0; i < numberOfLiterals; i++){
+        literal[i] = (Literal *) malloc(sizeof(Literal));
+        literal[i]->id = liter[i].id;
+        literal[i]->valor = UNSOLVED;
+    }
+
+    return literal;
+
+
+
+    /*
     Literals *newLiterals = initLiterals();
     Literals *initPointer = NULL;
     Literals *oldLiterals = liter;
@@ -176,17 +190,44 @@ Literals *copyLiterals(Literals *liter){
         
         oldLiterals = oldLiterals->next;
     }
-
     return initPointer;
+    */
 }
 
-int tryGreedy(Literals **literals, Formula *formula, int numberOfIterations){
+int tryGreedy(Literal **literals, Formula *formula, int numberOfRepetitions, int numberOfLiterals){
     
     Solution solucao;
-    solucao.literais = *literals;
+    solucao.literais = literals;
+    solucao.numberOfLiterals = numberOfLiterals;
     solucao.satClauses = 0;
-    
+
     greedy(&solucao, formula);
+
+    int i, j;
+    
+    Solution *newSolution;
+
+    for (i = 0; i < numberOfRepetitions; i++){
+        newSolution = (Solution *) malloc(sizeof(Solution));
+        newSolution->literais = copyLiterals(*literals, numberOfLiterals);
+        newSolution->numberOfLiterals = numberOfLiterals;
+        newSolution->satClauses = 0;
+
+        greedy(newSolution, formula);
+
+        if ((newSolution->satClauses) > (solucao.satClauses)){
+            for (j = 0; j < numberOfLiterals; j++){
+                solucao.literais[j]->valor = newSolution->literais[j]->valor;
+                solucao.satClauses = newSolution->satClauses;
+            }
+        }
+
+        for(j = 0; j < numberOfLiterals; j++){
+            free(newSolution->literais[j]);
+        }
+        free(newSolution->literais);
+        free(newSolution);
+    }
     
     return solucao.satClauses;
     
